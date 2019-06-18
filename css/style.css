@@ -1,3 +1,20 @@
 
 
 
+main {
+    width: 960px;
+    margin: auto;
+}
+
+main > div {
+    background: black;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+div > img {
+    max-width: 100%;
+    height: auto;
+}
+
+

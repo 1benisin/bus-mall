@@ -1,6 +1,6 @@
 'use strict';
 
-var imageArr = [
+var imageArray = [
     "img/bag.jpg",
     "img/banana.jpg",
     "img/bathroom.jpg",
@@ -14,7 +14,6 @@ var imageArr = [
     "img/pen.jpg",
     "img/pet-sweep.jpg",
     "img/scissors.jpg",
-    "img/screen-shot.png",
     "img/shark.jpg",
     "img/sweep.png",
     "img/tauntaun.jpg",
@@ -23,54 +22,100 @@ var imageArr = [
     "img/water-can.jpg",
     "img/wine-glass.jpg"
 ];
-
-var slot1 = document.getElementById('slot1');
-var slot2 = document.getElementById('slot2');
-var slot3 = document.getElementById('slot3');
-
-var slotsArr = [slot1, slot2, slot3];
-var unusedArr = new Array(imageArr.length);
-var votesArr = new Array(imageArr.length).fill(0);
-var loadedArr = new Array(3);
+var totalClicks = 0;
+var maxClicks = 5;
+var previousSetOfImages = [];
 
 
+
+function Product(filepath) {
+    this.filepath = filepath;
+    this.displayed = 0;
+    this.clicks = 0;
+    Product.all.push(this);
+}
+Product.all = [];
 
 
 function setup() {
-    fillUnusedArray();
-    slot1.addEventListener('click', onImageClick);
-    slot2.addEventListener('click', onImageClick);
-    slot3.addEventListener('click', onImageClick);
-    slot1.src = imageArr[3];
-    slot2.src = imageArr[getRandomFromArray[imageArr]];
-    slot3.src = getRandomFromArray[imageArr];
+    // create all products
+    imageArray.forEach(element => {
+        new Product(element);
+    });
+    //setup listeners
+    setupListener()
 }
 
-function addImage(slot) {
+function setupListener() {
+    var container = document.getElementById('image-container');
+    container.addEventListener('click', handleClick);
+}
 
+// TODO refactor code
+function removeListener() {
+    var container = document.getElementById('image-container');
+    container.removeEventListener('click', handleClick);
 }
 
 
-function fillUnusedArray() {
-    for (var i = 0; i < unusedArr.length; i++) {
-        unusedArr[i] = i;
+function handleClick(event) {
+    for (var i = 0; i < Product.all.length; i++) {
+        if (Product.all[i].filepath === event.target.alt) {
+            Product.all[i].clicks++;
+            totalClicks++;
+            if (totalClicks >= maxClicks) {
+                removeListener();
+                triggerResults();
+            }
+            break;
+        }
     }
+    loadRandomImages();
 }
 
-function getRandomFromArray(arr) {
-    return (Math.floor(Math.random() * arr.length));
+function loadRandomImages() {
+
+    var containers = ['container1', 'container2', 'container3'];
+    var currentSetOfImages = [];
+
+    // for all 3 containers
+    for (var i = 0; i < containers.length; i++) {
+        var image = document.getElementById(containers[i]);
+
+        // Keep trying to find a unique image to display
+        var exit = false;
+        while (exit === false) {
+            var ranProductIndex = getRandProductIndex();
+
+            // If it hsan't been previously shown and its not on screen ...
+            if (!previousSetOfImages.includes(ranProductIndex) && !currentSetOfImages.includes(ranProductIndex)) {
+
+                Product.all[ranProductIndex].displayed++;
+
+                // Render it
+                image.src = Product.all[ranProductIndex].filepath;
+                image.alt = Product.all[ranProductIndex].filepath;
+
+                currentSetOfImages.push(ranProductIndex);
+                exit = true;
+            }
+        }
+    }
+
+    previousSetOfImages = currentSetOfImages;
 }
 
-function onImageClick() {
 
-    addImage();
-
-
+function getRandProductIndex() {
+    return Math.floor(Math.random() * Product.all.length);
 }
 
-
-
-
+function triggerResults() {
+    console.log('Trigger Results');
+}
 
 setup();
+loadRandomImages();
+
+
 
