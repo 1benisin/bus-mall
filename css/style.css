@@ -1,21 +1,47 @@
 
-
-
-main {
-    width: 960px;
-    margin: auto;
+* {
+    box-sizing: border-box;
 }
 
-main > div {
-    background: black;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 250px;
+h1 {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    text-align: center;
+    font-size: 2em;
+    padding: 1em;
+}
+
+
+body {
+    
+    width: 960px;
+    margin: auto;
+    /* display: grid;
+    grid-template-columns: 1fr 1fr 1fr; */
+}
+
+div > div {
+    border: 2px solid black;
+    /* height: 320px;
+    width: 310px; */
+    display: inline-block;
+    /* float: left; */
+
 }
 
 div > img {
-    max-width: 100%;
-    height: auto;
+    /* max-width: 100%;
+    height: auto; */
+    height: 320px;
+    width: 310px;
+    object-fit: contain;
+    /* object-position: 50% 50%; */
 }
+
+footer {
+    width: 50%;
+    margin: auto;
+}
+
+
 
 
