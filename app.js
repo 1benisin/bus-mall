@@ -23,8 +23,9 @@ var imageArray = [
     "img/wine-glass.jpg"
 ];
 var totalClicks = 0;
-var maxClicks = 5;
+var maxClicks = 25;
 var previousSetOfImages = [];
+var chartContext = document.getElementById('chart').getContext('2d');
 
 
 
@@ -57,21 +58,6 @@ function removeListener() {
     container.removeEventListener('click', handleClick);
 }
 
-
-function handleClick(event) {
-    for (var i = 0; i < Product.all.length; i++) {
-        if (Product.all[i].filepath === event.target.alt) {
-            Product.all[i].clicks++;
-            totalClicks++;
-            if (totalClicks >= maxClicks) {
-                removeListener();
-                triggerResults();
-            }
-            break;
-        }
-    }
-    loadRandomImages();
-}
 
 function loadRandomImages() {
 
@@ -110,12 +96,84 @@ function getRandProductIndex() {
     return Math.floor(Math.random() * Product.all.length);
 }
 
+
+function handleClick(event) {
+    for (var i = 0; i < Product.all.length; i++) {
+        if (Product.all[i].filepath === event.target.alt) {
+            Product.all[i].clicks++;
+            totalClicks++;
+            if (totalClicks >= maxClicks) {
+                removeListener();
+                triggerResults();
+            }
+            break;
+        }
+    }
+    loadRandomImages();
+}
+
+
+
 function triggerResults() {
     console.log('Trigger Results');
+    renderChart();
 }
+
+function renderChart() {
+    console.log('renderChart called');
+
+    var labels = [];
+    var voteData = [];
+    var colors = [];
+
+    for (var i = 0; i < Product.all.length; i++) {
+        Product.all[i].percentage = Math.round(Product.all[i].clicks / Product.all[i].displayed * 100);
+    }
+
+    Product.all.sort(function (a, b) {
+        return b.percentage - a.percentage;
+    });
+
+    for (var j = 0; j < Product.all.length; j++) {
+        labels.push(Product.all[j].filepath);
+        voteData.push(Product.all[j].percentage);
+        var randomColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
+        colors.push(randomColor);
+    }
+
+    console.log(labels);
+    console.log(voteData);
+    console.log(colors);
+
+    var myChart = new Chart(chartContext, {
+        type: 'horizontalBar',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: "Products Clicked by Percentage",
+                    data: voteData,
+                    backgroundColor: colors
+                }
+            ]
+        },
+        options: {
+            responsive: false,
+            maintainAspectRatio: true,
+            scales: {
+                yAxes: [
+                    {
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }
+                ]
+            }
+        }
+    });
+
+}
+
 
 setup();
 loadRandomImages();
-
-
-

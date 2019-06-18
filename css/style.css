@@ -10,6 +10,7 @@ main > div {
     background: black;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 250px;
 }
 
 div > img {
