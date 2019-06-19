@@ -46,8 +46,13 @@ function initlsData() {
     var lsObject = localStorage.getItem(dataStorageKey);
     if (lsObject) {
         // parse it
+        var parsedData = JSON.parse(lsObject);
+        console.log('this is parsed data from local storage');
+        console.log(parsedData);
         // create all products again
-
+        parsedData.forEach(element => {
+            new Product(element.filepath, element.displayCount, element.clickCount);
+        });
     } else {
         // if not create new products
         imageArray.forEach(element => {
@@ -55,6 +60,7 @@ function initlsData() {
         });
     }
 
+    storelsData();
 }
 
 function storelsData() {
